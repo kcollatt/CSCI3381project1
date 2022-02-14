@@ -10,73 +10,91 @@ import java.util.*;
 
 public class ProductCollection {
 
-	
+
 
 	private int size;
 	private static final int DEFAULT_SIZE = 10;
-	private Product[] myData;
+	private Product[] ProductList;
 	private String collectionName;
 	private String fileName;
 
 	public ProductCollection() {
 		// default constructor
 		size = 0;
-		myData = new Product[DEFAULT_SIZE];
+		ProductList = new Product[DEFAULT_SIZE];
 		collectionName = "a collection";
 		fileName = null;
-		
+
 	}
 	public ProductCollection(String fn) {
-		// constructor with given course name and input file
+		// constructor with given input file
 		this();
 		fileName = fn;
 		readFile();
-		
+
 	}	
-	
+
 	public void addProduct(Product p) {
 		// method that adds the input Product to the myData array
-		if (size >= myData.length)
+		
+		if (size >= ProductList.length)
 			doubleArray();
-		myData[size] = p;
+		ProductList[size] = p;
 		size++;
 	}
-	
+
 	private void doubleArray () {
 		// private method used to double the size of the array when needed
-		Product[] newProduct = new Product[myData.length*2];
+		Product[] newProduct = new Product[ProductList.length*2];
 		for (int i = 0; i < size; i++) {
-			newProduct[i] = myData[i];
+			newProduct[i] = ProductList[i];
 		}		
-		myData = newProduct;
+		ProductList = newProduct;
+		size= ProductList.length;
 	}
-	
+
 	public String toString() {
 		// returns a string representation of this collection
 		String toReturn = collectionName+"\n";
 		for (int i = 0; i < size; i++) {
-			if (myData[i] instanceof Product)
-				toReturn += "Product:  "+myData[i]+"\n";
+			if (ProductList[i] instanceof Product)
+				toReturn += "Product:  "+ProductList[i]+"\n";
 		}
 		return toReturn;
 	}
 	
+	//method that finds product by ID
+	public String findProduct (String id){
+		String found="";
+		
+		for(int i=0; i<size; i++){
+			if(ProductList[i].getId().equals(id)){
+				found = ProductList[i].toString();
+				return found;
+			}
+			
+		}
+		
+		
+		return "Could not find product";
+	}
+
 	public void removeProduct (String id) {
 		// method that removes the product from the array with the input id decrement size
 
 		for(int i=0; i<size; i++){
-			if(myData[i].getId().equals(id)){
+			if(ProductList[i].getId().equals(id)){
 				for(int j=i; j<size-1; j++){
-					myData[j] = myData[j+1];
+					ProductList[j] = ProductList[j+1];
 				}
 				size--;
 			}
 		}
-		
+
 	}
-	
-	
-	
+
+
+//readfile code
 	private void readFile () {
 		BufferedReader lineReader = null;
 		try {
@@ -90,9 +108,9 @@ public class ProductCollection {
 				String collection = lineReader.readLine();
 				String image = lineReader.readLine();
 				String quantity = lineReader.readLine();
-				
-					addProduct(new Product(name,id,size2,collection,image,quantity));
-				
+
+				addProduct(new Product(name,id,size2,collection,image,quantity));
+
 			}
 		} catch (Exception e) {
 			System.err.println("there was a problem with the file reader, try different read type.");
@@ -106,10 +124,10 @@ public class ProductCollection {
 					String collection = lineReader.readLine();
 					String image = lineReader.readLine();
 					String quantity = lineReader.readLine();
-					
-						addProduct(new Product(name,id,size2,collection,image,quantity));
-					
-					}
+
+					addProduct(new Product(name,id,size2,collection,image,quantity));
+
+				}
 			} catch (Exception e2) {
 				System.err.println("there was a problem with the file reader, try again.  either no such file or format error");
 			} finally {
@@ -129,12 +147,12 @@ public class ProductCollection {
 				}
 		}
 	} // end of readFile method	
-	
-	
-	
-	
-	
-		
+
+
+
+
+
+
 	public void writeFile () {
 		// overloaded method: this calls doWrite with file used to read data
 		// use this for saving data between runs
@@ -156,7 +174,7 @@ public class ProductCollection {
 			BufferedWriter myOutfile = new BufferedWriter(fw);			
 
 			for (int i = 0; i < size; i++) {
-				Product product1 = myData[i];
+				Product product1 = ProductList[i];
 				if (product1 instanceof Product) {
 					myOutfile.write ("product\n");
 					myOutfile.write (product1.getName()+"\n");
@@ -178,6 +196,6 @@ public class ProductCollection {
 			System.err.println("Didn't save to " + fn);
 		}
 	}	
-		
-		
+
+
 }
